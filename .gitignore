@@ -1,0 +1,9 @@
+.vscode
+
+*.o
+*.bin
+.pio/nanoMonitor.zip
+.pio/build
+
+test/
+ui-design/
