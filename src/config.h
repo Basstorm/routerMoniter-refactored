@@ -8,6 +8,8 @@
 
 // WIFI后台地址
 #define ROUTER_ADDR "192.168.2.1"
+// 路由器内存大小
+#define ROUTER_MEMORY 1024.0
 // Netdata端口
 #define NETDATA_PORT 19999
 

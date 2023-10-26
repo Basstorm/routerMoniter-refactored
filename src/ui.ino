@@ -2,6 +2,7 @@
 
 #include "tft.h"
 #include "utils.h"
+#include "config.h"
 
 #include <ESP8266WiFi.h>
 
@@ -91,7 +92,7 @@ void set_cpu_usage(double cpu_usage) {
 }
 
 void set_mem_usage(double mem_usage) {
-    double mem = 100 * (1.0 - mem_usage / 1024.0);
+    double mem = 100 * (1.0 - mem_usage / ROUTER_MEMORY);
     if (mem_bar != NULL) lv_bar_set_value(mem_bar, mem, LV_ANIM_ON);
     if (mem_value_label != NULL) lv_label_set_text_fmt(mem_value_label, "%2.0f%%", mem);
 }
