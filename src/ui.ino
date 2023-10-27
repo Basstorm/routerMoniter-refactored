@@ -6,6 +6,8 @@
 
 #include <ESP8266WiFi.h>
 
+#define UI_RENDERING_BUFFER_MAX_SIZE 720
+
 // 监测值
 lv_coord_t upload_series[10] = {0};
 lv_coord_t download_series[10] = {0};
@@ -17,7 +19,7 @@ LV_FONT_DECLARE(tencent_w7_22)
 LV_FONT_DECLARE(tencent_w7_24)
 
 static lv_disp_buf_t disp_buf;
-static lv_color_t buf[LV_HOR_RES_MAX * 10];
+static lv_color_t buf[UI_RENDERING_BUFFER_MAX_SIZE];
 
 
 static lv_obj_t *login_page = NULL;
@@ -225,10 +227,11 @@ static void create_monitor_ui() {
         lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
 
         /*Add a faded are effect*/
-        lv_obj_set_style_local_bg_opa(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, LV_OPA_50); /*Max. opa.*/
-        lv_obj_set_style_local_bg_grad_dir(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
-        lv_obj_set_style_local_bg_main_stop(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, 255); /*Max opa on the top*/
-        lv_obj_set_style_local_bg_grad_stop(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, 0);   /*Transparent on the bottom*/
+        // 省内存，降负载，暂时禁用
+        // lv_obj_set_style_local_bg_opa(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, LV_OPA_50); /*Max. opa.*/
+        // lv_obj_set_style_local_bg_grad_dir(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+        // lv_obj_set_style_local_bg_main_stop(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, 255); /*Max opa on the top*/
+        // lv_obj_set_style_local_bg_grad_stop(chart, LV_CHART_PART_SERIES, LV_STATE_DEFAULT, 0);   /*Transparent on the bottom*/
 
         /*Add two data series*/
         ser1 = lv_chart_add_series(chart, LV_COLOR_RED);
@@ -432,7 +435,7 @@ void switch_to_login_ui() {
 
 void setup_ui() {
     lv_init();
-    lv_disp_buf_init(&disp_buf, buf, NULL, LV_HOR_RES_MAX * 10);
+    lv_disp_buf_init(&disp_buf, buf, NULL, UI_RENDERING_BUFFER_MAX_SIZE);
 
     /*Initialize the display*/
     lv_disp_drv_t disp_drv;
