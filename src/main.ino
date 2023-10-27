@@ -55,8 +55,8 @@ void loop() {
     uint32_t delay_interval = lv_task_handler(); /* let the GUI do its work */
     if (WiFi.isConnected()) {
         get_netdata_chart_info();
+        ntp_client.update();
+        automatic_brightness(ntp_client);
     }
-    ntp_client.update();
-    automatic_brightness(ntp_client);
     delay(delay_interval);
 }
