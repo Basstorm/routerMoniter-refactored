@@ -150,7 +150,7 @@ static void create_monitor_ui() {
         // 显示ip地址
         ip_label = lv_label_create(monitor_page, NULL);
         //lv_label_set_text(ip_label, WiFi.localIP().toString().c_str());
-        lv_label_set_text(ip_label, "No IP NOW");
+        lv_label_set_text(ip_label, String(F("No IP NOW")).c_str());
         lv_obj_set_pos(ip_label, 10, 220);
 
         lv_obj_t *cont = lv_cont_create(monitor_page, NULL);
@@ -193,24 +193,24 @@ static void create_monitor_ui() {
         lv_style_set_text_font(&font_22, LV_STATE_DEFAULT, &tencent_w7_22);
 
         up_speed_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(up_speed_label, "56.78");
+        lv_label_set_text(up_speed_label, String(F("56.78")).c_str());
         lv_obj_add_style(up_speed_label, LV_LABEL_PART_MAIN, &font_22);
         lv_obj_set_style_local_text_color(up_speed_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(up_speed_label, 30, 15);
 
         up_speed_unit_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(up_speed_unit_label, "K/S");
+        lv_label_set_text(up_speed_unit_label, String(F("K/S")).c_str());
         lv_obj_set_style_local_text_color(up_speed_unit_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, speed_label_color);
         lv_obj_set_pos(up_speed_unit_label, 90, 18);
 
         down_speed_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(down_speed_label, "12.34");
+        lv_label_set_text(down_speed_label, String(F("12.34")).c_str());
         lv_obj_add_style(down_speed_label, LV_LABEL_PART_MAIN, &font_22);
         lv_obj_set_style_local_text_color(down_speed_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(down_speed_label, 142, 15);
 
         down_speed_unit_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(down_speed_unit_label, "M/S");
+        lv_label_set_text(down_speed_unit_label, String(F("M/S")).c_str());
         lv_obj_set_style_local_text_color(down_speed_unit_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, speed_label_color);
         lv_obj_set_pos(down_speed_unit_label, 202, 18);
 
@@ -220,7 +220,7 @@ static void create_monitor_ui() {
         lv_obj_set_size(chart, 220, 70);
         lv_obj_align(chart, NULL, LV_ALIGN_CENTER, 0, -40);
         lv_chart_set_type(chart, LV_CHART_TYPE_LINE); /*Show lines and points too*/
-        lv_chart_set_range(chart, 0, 4096);
+        lv_chart_set_range(chart, 0, 1024);
         lv_chart_set_point_count(chart, 10); // 设置显示点数
         lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
 
@@ -242,12 +242,12 @@ static void create_monitor_ui() {
 
         // 绘制进度条  CPU 占用
         lv_obj_t *cpu_title = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(cpu_title, "CPU");
+        lv_label_set_text(cpu_title, String(F("CPU")).c_str());
         lv_obj_set_style_local_text_color(cpu_title, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(cpu_title, 5, 140);
 
         cpu_value_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(cpu_value_label, "34%");
+        lv_label_set_text(cpu_value_label, String(F("34%")).c_str());
         lv_obj_add_style(cpu_value_label, LV_LABEL_PART_MAIN, &font_22);
         lv_obj_set_style_local_text_color(cpu_value_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(cpu_value_label, 85, 135);
@@ -271,12 +271,12 @@ static void create_monitor_ui() {
 
         // 绘制内存占用
         lv_obj_t *men_title = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(men_title, "Memory");
+        lv_label_set_text(men_title, String(F("Memory")).c_str());
         lv_obj_set_style_local_text_color(men_title, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(men_title, 5, 180);
 
         mem_value_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(mem_value_label, "42%");
+        lv_label_set_text(mem_value_label, String(F("42%")).c_str());
         lv_obj_add_style(mem_value_label, LV_LABEL_PART_MAIN, &font_22);
         lv_obj_set_style_local_text_color(mem_value_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(mem_value_label, 85, 175);
@@ -326,7 +326,7 @@ static void create_monitor_ui() {
         lv_style_set_text_font(&font_24, LV_STATE_DEFAULT, &tencent_w7_24);
 
         temp_value_label = lv_label_create(monitor_page, NULL);
-        lv_label_set_text(temp_value_label, "72℃");
+        lv_label_set_text(temp_value_label, String(F("72°C")).c_str());
         lv_obj_add_style(temp_value_label, LV_LABEL_PART_MAIN, &font_24);
         lv_obj_set_style_local_text_color(temp_value_label, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
         lv_obj_set_pos(temp_value_label, 160, 170);
