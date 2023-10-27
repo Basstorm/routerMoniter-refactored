@@ -37,10 +37,13 @@ void disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 }
 
 // 屏幕亮度设置，value [0, 256] 越小越亮,越大越暗
+static int last_brightness = 0;
 void set_brightness(int value) {
+    if (value == last_brightness) return;
     pinMode(TFT_BL, INPUT);
     analogWrite(TFT_BL, value);
     pinMode(TFT_BL, OUTPUT);
+    last_brightness = value;
 }
 
 static unsigned long last_run_auto_brightness_milsec = 0;
