@@ -25,6 +25,7 @@ static void on_station_mode_connected_handler(const WiFiEventStationModeConnecte
 
 static void on_station_mode_disconnected_handler(const WiFiEventStationModeDisconnected &event) {
     LOG("[%s] WiFi Disconnected.\n", ntp_client.getFormattedTime());
+    ntp_client.end();
     switch_to_login_ui();
 }
 
