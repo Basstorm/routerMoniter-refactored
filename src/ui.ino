@@ -51,21 +51,6 @@ static void ui_task_cb(lv_task_t *task) {
     LOG("⚠ Left Memory: %u\n", ESP.getFreeHeap());
 }
 
-/* Reading input device (simulated encoder here) */
-static bool read_encoder(lv_indev_drv_t *indev, lv_indev_data_t *data)
-{
-    static int32_t last_diff = 0;
-    int32_t diff = 0;                   /* Dummy - no movement */
-    int btn_state = LV_INDEV_STATE_REL; /* Dummy - no press */
-
-    data->enc_diff = diff - last_diff;
-    data->state = btn_state;
-
-    last_diff = diff;
-
-    return false;
-}
-
 static lv_coord_t update_net_series(lv_coord_t *series, double speed) {
     lv_coord_t local_max = series[0];
     for (int index = 0; index < 9; index++) {
@@ -445,13 +430,6 @@ void setup_ui() {
     disp_drv.flush_cb = disp_flush;
     disp_drv.buffer = &disp_buf;
     lv_disp_drv_register(&disp_drv);
-
-    /*Initialize the (dummy) input device driver*/
-    lv_indev_drv_t indev_drv;
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_ENCODER;
-    indev_drv.read_cb = read_encoder;
-    lv_indev_drv_register(&indev_drv);
 
     switch_to_login_ui();
     lv_task_create(ui_task_cb, 2000, LV_TASK_PRIO_MID, NULL);
