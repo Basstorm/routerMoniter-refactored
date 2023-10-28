@@ -36,42 +36,44 @@ void get_netdata_chart_info() {
     };
 
     for(int i = 0; i < DATA_SOURCE_MAX; i++) {
-        String request_url = F("http://") + String(ROUTER_ADDR) + F(":") + String(NETDATA_PORT) + F("/api/v1/data?chart=") + chart_ids[i] + F("&format=array&points=9&group=average&gtime=0&options=s%7Cjsonwrap%7Cnonzero&after=-2");
+        String request_url = F("http://") + String(F(ROUTER_ADDR)) + F(":") + String(NETDATA_PORT) + F("/api/v1/data?chart=") + chart_ids[i] + F("&format=array&points=9&group=average&gtime=0&options=s%7Cjsonwrap%7Cnonzero&after=-2");
+        int http_code = 0;
+        do {
+            http_client.begin(wifi_client, request_url.c_str());
+            http_code = http_client.GET();
 
-        http_client.begin(wifi_client, request_url.c_str());
-        int http_code = http_client.GET();
-
-        if (http_code != HTTP_CODE_OK) {
-            LOG("HTTP GET request failed with code: %d\n", http_code);
-            continue;
-        }
-        DeserializationError error = ArduinoJson::deserializeJson(doc, http_client.getString().c_str());
-        if (error != nullptr) {
-            LOG("Error : %s, response: %s\n", error.c_str(), http_client.getString().c_str());
-            return;
-        }
-        if (doc.containsKey(F("latest_values")) == false) {
-            LOG("Error: json result doesnt contain latest_values key.\n");
-            return;
-        }
-         
-        JsonArray latest_values = doc[F("latest_values")];
-        switch (i) {
-            case DATA_SOURCE_CPU_USAGE:
-                set_cpu_usage(latest_values[0]);
+            if (http_code != HTTP_CODE_OK) {
+                LOG("HTTP GET request failed with code: %d\n", http_code);
                 break;
-            case DATA_SOURCE_MEM_USAGE:
-                set_mem_usage(latest_values[0]);
+            }
+            DeserializationError error = ArduinoJson::deserializeJson(doc, http_client.getStream());
+            if (error != nullptr) {
+                LOG("Error : %s, response: %s\n", error.c_str(), http_client.getString().c_str());
                 break;
-            case DATA_SOURCE_NETWORK:
-                set_network_speed(latest_values[1], latest_values[0]);
+            }
+            if (doc.containsKey(F("latest_values")) == false) {
+                LOG("Error: json result doesnt contain latest_values key.\n");
                 break;
-            case DATA_SOURCE_TEMP:
-                set_temperature(latest_values[0]);
-                break;
-            default:
-                break;
-        }
+            }
+            
+            JsonArray latest_values = doc[F("latest_values")];
+            switch (i) {
+                case DATA_SOURCE_CPU_USAGE:
+                    set_cpu_usage(latest_values[0]);
+                    break;
+                case DATA_SOURCE_MEM_USAGE:
+                    set_mem_usage(latest_values[0]);
+                    break;
+                case DATA_SOURCE_NETWORK:
+                    set_network_speed(latest_values[1], latest_values[0]);
+                    break;
+                case DATA_SOURCE_TEMP:
+                    set_temperature(latest_values[0]);
+                    break;
+                default:
+                    break;
+            }
+        } while(0);
         doc.clear();
         http_client.end();
     }
