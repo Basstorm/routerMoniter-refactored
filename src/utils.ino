@@ -3,7 +3,7 @@
 #include <cstdio>
 
 double bytes_to_human_size(double bytes, char **human_size) {
-	static char *suffix[] = {"K/s", "M/s", "G/", "T/s"};
+	static const char *suffix[] = {"K/s", "M/s", "G/", "T/s"};
 	char length = sizeof(suffix) / sizeof(suffix[0]);
 
 	int i = 0;
@@ -13,6 +13,6 @@ double bytes_to_human_size(double bytes, char **human_size) {
 		i++;
 	}
 
-	*human_size = suffix[i];
+	*human_size = (char *)suffix[i];
 	return result;
 }
