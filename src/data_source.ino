@@ -27,7 +27,7 @@ void get_netdata_chart_info() {
     }
     WiFiClient wifi_client;
     HTTPClient http_client;
-    DynamicJsonDocument doc(1024);
+    DynamicJsonDocument doc(2048);
     String chart_ids[DATA_SOURCE_MAX] = {
         F("system.cpu"), 
         F("mem.available"), 
@@ -51,24 +51,29 @@ void get_netdata_chart_info() {
                 LOG("Error : %s, response: %s\n", error.c_str(), http_client.getString().c_str());
                 break;
             }
-            if (doc.containsKey(F("latest_values")) == false) {
-                LOG("Error: json result doesnt contain latest_values key.\n");
+            if (doc.containsKey(F("result")) == false) {
+                LOG("Error: json result doesnt contain result key.\n");
                 break;
             }
             
-            JsonArray latest_values = doc[F("latest_values")];
+            JsonArray result_value = doc[F("result")];
             switch (i) {
                 case DATA_SOURCE_CPU_USAGE:
-                    set_cpu_usage(latest_values[0]);
+                    set_cpu_usage(result_value[0]);
                     break;
                 case DATA_SOURCE_MEM_USAGE:
-                    set_mem_usage(latest_values[0]);
+                    set_mem_usage(result_value[0]);
                     break;
                 case DATA_SOURCE_NETWORK:
+                    if (doc.containsKey(F("latest_values")) == false) {
+                        LOG("Error: json result doesnt latest_values result key.\n");
+                        break;
+                    }
+                    JsonArray latest_values = doc[F("latest_values")];
                     set_network_speed(latest_values[1], latest_values[0]);
                     break;
                 case DATA_SOURCE_TEMP:
-                    set_temperature(latest_values[0]);
+                    set_temperature(result_value[0]);
                     break;
                 default:
                     break;
